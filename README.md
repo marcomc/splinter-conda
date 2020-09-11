@@ -51,7 +51,7 @@ Download the `splinter-conda.tar.gz` package the run:
     export PATH="${_CONDA_ROOT}/bin:$PATH"
 
     # or activate the environment
-    . $ENVDIR/bin/activate
+    # . $ENVDIR/bin/activate
 
     # Fix issues with SSL Certificates
     CERT_PATH=$(python -m certifi)
