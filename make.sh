@@ -13,7 +13,6 @@ export PATH="${_CONDA_ROOT}/bin:$PATH"
 
 # Activate conda base environment
 # shellcheck disable=SC1091
-
 source miniconda/bin/activate
 
 # Install Conda packager
