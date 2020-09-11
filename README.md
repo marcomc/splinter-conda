@@ -4,7 +4,7 @@ Miniconda pre-packed for Splinter provisioning tool
 # Build splinter-conda package
 
     #!/usr/bin/env bash
-    
+
     # Download Installare
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 
@@ -15,7 +15,11 @@ Miniconda pre-packed for Splinter provisioning tool
     export _CONDA_ROOT="$(pwd)/miniconda"
     export PATH="${_CONDA_ROOT}/bin:$PATH"
 
+    # Activate conda base environment
+    source miniconda/bin/activate
+
     # Install Conda packager
+    yes | conda update -n base -c defaults conda
     yes | conda install -c conda-forge conda-pack
 
     # Create and activate Splinter specific environment
@@ -48,3 +52,8 @@ Download the `splinter-conda.tar.gz` package the run:
 
     # or activate the environment
     . $ENVDIR/bin/activate
+
+    # Fix issues with SSL Certificates
+    CERT_PATH=$(python -m certifi)
+    export SSL_CERT_FILE=${CERT_PATH}
+    export REQUESTS_CA_BUNDLE=${CERT_PATH}
