@@ -1,38 +1,51 @@
 #!/usr/bin/env bash
 
-# Download Installare
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+environment_file="environment.yml"
+conda_dir="miniconda"
+miniconda_install_script="Miniconda3-latest-MacOSX-x86_64.sh"
+miniconda_install_script_url="https://repo.anaconda.com/miniconda/${miniconda_install_script}"
+splinter_env="splinter-conda"
 
-# Install Conda
-yes | bash Miniconda3-latest-MacOSX-x86_64.sh -f -b -p ./miniconda
-
+if [ ! -d "./${conda_dir}" ]; then
+  echo "Installing Miniconda into "./${conda_dir}""
+  # remove old version of the installer
+  rm -f "${miniconda_install_script}" || exit 1
+  # Download Installare
+  wget "${miniconda_install_script_url}" || exit 1
+  # Install Conda
+  yes | bash "${miniconda_install_script}" -f -b -p "./${conda_dir}"  || exit 1
+fi
 # Set the environment (equivalent to a temporary activation)
-_CONDA_ROOT="$(pwd)/miniconda"
+_CONDA_ROOT="$(pwd)/${conda_dir}"
 export _CONDA_ROOT="${_CONDA_ROOT}"
 export PATH="${_CONDA_ROOT}/bin:$PATH"
 
 # Activate conda base environment
 # shellcheck disable=SC1091
-source miniconda/bin/activate
+# source "./${conda_dir}/bin/activate"
 
 # Install Conda packager
-yes | conda update -n base -c defaults conda
-yes | conda install -c conda-forge conda-pack
+# conda config --set pip_interop_enabled True
+echo "Updating Conda..."
+conda update -y -n base -c defaults conda  || exit 1
+echo "Installing Conda-Pack..."
+conda install -y conda-forge::conda-pack  || exit 1
 
 # Create and activate Splinter specific environment
-yes | conda create -n splinter-conda
+# conda create -y -n "${splinter_env}"
+if conda env list | cut -d " " -f1 | grep "${splinter_env}"; then
+echo "Removing the exisiting '${splinter_env}' environment..."
+  conda env remove -y -n "${splinter_env}" || exit 1
+fi
 
-# Qctivate splinter-conda environment
-conda activate splinter-conda
-
-# Installer required packages
-yes | conda install -c conda-forge ansible wheel passlib
-
-# Deactivate splinter-conda  environment
-conda deactivate
-
+echo "Creating the '${splinter_env}' environment..."
+conda env create -f "${environment_file}"  || exit 1
 # rm exisiting package
-rm splinter-conda.tar.gz
+if [ -f "${splinter_env}.tar.gz" ]; then
+  echo "Removing old package '${splinter_env}.tar.gz'..."
+  rm "${splinter_env}.tar.gz" 2>/dev/null  || exit 1
+fi
 
 # create splinter-conda.tar.gz package
-conda pack -n splinter-conda
+echo "Packing '${splinter_env}' into '${splinter_env}.tar.gz'..."
+conda pack -n "${splinter_env}"  || echo "Packing errored!!" && exit 1

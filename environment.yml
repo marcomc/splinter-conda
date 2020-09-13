@@ -1,0 +1,28 @@
+name: splinter-conda
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ansible=2.9.13=py38h32f6830_0
+  - boto=2.49.0=py_0
+  - ca-certificates
+  - certifi
+  - cffi=1.14.1=py38hc4dd44e_0
+  - cryptography=3.1=py38h52adbb4_0
+  - httplib2=0.18.1=pyh9f0ad1d_0
+  - jinja2=2.11.2=pyh9f0ad1d_0
+  - libffi=3.2.1=hb1e8313_1007
+  - ncurses=6.2=hb1e8313_1
+  - openssl=1.1.1g=haf1e3a3_1
+  - os-service-types=1.7.0=pyh9f0ad1d_0
+  - passlib=1.7.2=pyh9f0ad1d_1
+  - pip=20.2.3=py_0
+  - pyopenssl=19.1.0=py_1
+  - python=3.8.5=hfc71d35_7_cpython
+  - readline=8.0=h0678c8f_2
+  - sqlite=3.33.0=h960bd1c_0
+  - urllib3=1.25.10=py_0
+  - wheel=0.35.1=pyh9f0ad1d_0
+  - yaml=0.2.5=haf1e3a3_0
+  - zlib=1.2.11=h7795811_1009
+prefix: ./miniconda/envs/splinter-conda

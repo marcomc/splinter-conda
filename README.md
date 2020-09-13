@@ -1,7 +1,11 @@
 # splinter-conda
-Miniconda pre-packed for Splinter provisioning tool
+Miniconda pre-packed for Splinter provisioning tool.
+
+It includes **Python**, **Ansible**, Wheel and Passlib. See [environment.yml](./environment.yml) for details of the packed components and versions.
 
 # Build splinter-conda package
+
+The below instructions have been scripted in [make.sh](./make.sh) to automate the process of creating a packaged version of `splinter-conda`
 
     #!/usr/bin/env bash
 
@@ -11,23 +15,27 @@ Miniconda pre-packed for Splinter provisioning tool
     # Install Conda
     yes | bash Miniconda3-latest-MacOSX-x86_64.sh -f -b -p ./miniconda
 
-    # Set the environment (equivalent to a temporary activation)
+    # Set the environment (equivalent to the activation)
     export _CONDA_ROOT="$(pwd)/miniconda"
     export PATH="${_CONDA_ROOT}/bin:$PATH"
 
-    # Activate conda base environment
+    # Or activate conda base environment
     source miniconda/bin/activate
 
     # Install Conda packager
-    yes | conda update -n base -c defaults conda
-    yes | conda install -c conda-forge conda-pack
+    conda update -y -n base -c defaults conda
+    conda install -y -c conda-forge conda-pack
 
     # Create and activate Splinter specific environment
-    yes | conda create -n splinter-conda
+    conda create -y -n splinter-conda
     conda activate splinter-conda
 
     # Installer required packages
-    yes | conda install -c conda-forge ansible wheel passlib
+    conda install -y -c conda-forge python ansible wheel passlib textinfo
+
+    # export the list of required packages
+    # so that we can rebuild it from an environment file
+    conda env export > environment.yml
 
     # Deactivate Splinter specific environment
     conda deactivate
@@ -46,12 +54,15 @@ Download the `splinter-conda.tar.gz` package the run:
     mkdir $ENVDIR
     tar -xzf splinter-conda.tar.gz -C $ENVDIR
 
-    # add the conda dir to your your PATH
+    # Add the conda dir to your your PATH
     export _CONDA_ROOT="$(pwd)/$ENVDIR"
     export PATH="${_CONDA_ROOT}/bin:$PATH"
 
     # or activate the environment
-    # . $ENVDIR/bin/activate
+    source $ENVDIR/bin/activate
+
+    # VERY IMPORTANT! Cleanup prefixes from in the active environment.
+    conda-unpack
 
     # Fix issues with SSL Certificates
     CERT_PATH=$(python -m certifi)

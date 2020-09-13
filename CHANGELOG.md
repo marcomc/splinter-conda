@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.2
+- add a working `make.sh` script to automate the packaging process
+- add instructions to `unpack` the packaged environment
+
 ## Version 0.1
 - python 3.85
 - ansible 2.9.13
