@@ -1,3 +1,4 @@
+[![Build Status](https://api.travis-ci.com/marcomc/splinter-conda.png)](https://www.travis-ci.com/github/marcomc/splinter-conda/builds)
 # splinter-conda
 Miniconda pre-packed for Splinter provisioning tool.
 
