@@ -1,5 +1,10 @@
 # CHANGELOG
 
+- add BATS units testing
+- add Travis-CI integration
+- add error control if package already exists
+- add cleanup after packaging
+
 ## Version 0.2
 - add a working `make.sh` script to automate the packaging process
 - add instructions to `unpack` the packaged environment
