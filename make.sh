@@ -5,6 +5,12 @@ conda_dir="miniconda"
 miniconda_install_script="Miniconda3-latest-MacOSX-x86_64.sh"
 miniconda_install_script_url="https://repo.anaconda.com/miniconda/${miniconda_install_script}"
 splinter_env="splinter-conda"
+splinter_conda_package="${splinter_env}.tar.gz"
+
+if [[ -f $splinter_conda_package ]]; then
+  echo "'$splinter_conda_package' already exists! remove it before building a new one"
+  exit 1
+fi
 
 if [ ! -d "./${conda_dir}" ]; then
   echo "Installing Miniconda into "./${conda_dir}""
@@ -48,4 +54,13 @@ fi
 
 # create splinter-conda.tar.gz package
 echo "Packing '${splinter_env}' into '${splinter_env}.tar.gz'..."
-conda pack -n "${splinter_env}"  || echo "Packing errored!!" && exit 1
+if ! conda pack -n "${splinter_env}"; then
+  echo "Error: packing ${splinter_env} failed!!"
+  exit 1
+fi
+
+echo "Cleaning up"
+echo "Removing 'conda' directory"
+rm -rf "$conda_dir" || exit 1
+echo "Removing 'Miniconda' installer"
+rm "$miniconda_install_script" || exit 1
